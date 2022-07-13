@@ -89,8 +89,6 @@ namespace StudentsAppMVC.Controllers
         public ActionResult Delete(int id)
         {
             var student = _dbContext.Students.FirstOrDefault(x => x.StudentId == id);
-            _dbContext.Students.Remove(student);
-            _dbContext.SaveChanges();
             return View(student);
         }
 
@@ -99,15 +97,17 @@ namespace StudentsAppMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, StudentModel studentModel)
         {
-            var student = students.FirstOrDefault(x => x.StudentId == id);
-            students.Remove(student);
+            var student = _dbContext.Students.FirstOrDefault(x => x.StudentId == id);
+            _dbContext.Students.Remove(student);
+            _dbContext.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public ActionResult ChangeActiveStatus(int id)
         {
-            var specificStudent = students.FirstOrDefault(x => x.StudentId == id);
+            var specificStudent = _dbContext.Students.FirstOrDefault(x => x.StudentId == id);
             specificStudent.IsActive = !specificStudent.IsActive;
+            _dbContext.SaveChanges();
             return RedirectToAction("Details", "Student", new { id = specificStudent.StudentId });
         }
     }
